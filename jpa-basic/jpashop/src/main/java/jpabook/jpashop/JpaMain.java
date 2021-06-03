@@ -1,6 +1,7 @@
 package jpabook.jpashop;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -9,6 +10,8 @@ import javax.persistence.Persistence;
 
 import org.hibernate.Hibernate;
 
+import jpabook.jpashop.domain.Address;
+import jpabook.jpashop.domain.AddressEntity;
 import jpabook.jpashop.domain.Child;
 import jpabook.jpashop.domain.Item;
 import jpabook.jpashop.domain.Member;
@@ -41,7 +44,11 @@ public class JpaMain {
 //            ex8_8(em, emf);
 //            ex8_9(em);
 //            ex8_10(em);
-            ex8_11(em);
+//            ex8_11(em);
+//            ex9_1(em);
+//            ex9_2(em);
+//            ex9_3(em);
+            ex9_4(em);
 
 
             System.out.println("======");
@@ -55,6 +62,93 @@ public class JpaMain {
         }
 
         emf.close();
+    }
+
+    private static void ex9_4(EntityManager em) {
+        Member member = new Member();
+        member.setName("name1");
+        member.setHomeAddress(new Address("a", "b", "c"));
+        member.getFavoriteFoods().add("치킨");
+        member.getFavoriteFoods().add("피자");
+        member.getFavoriteFoods().add("족발");
+
+        member.getAddressHistory2().add(new AddressEntity("o1", "o1", "o1"));
+        member.getAddressHistory2().add(new AddressEntity("o2", "o2", "o2"));
+
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        System.out.println("======= START ========");
+        final Member findMember = em.find(Member.class, member.getId());
+
+        // newCity
+//        findMember.setHomeAddress(new Address("newCity", "2", "2"));
+
+        // 치킨 -> 한식
+//        findMember.getFavoriteFoods().remove("치킨");
+//        findMember.getFavoriteFoods().add("한식");
+
+        // address history, 전체삭제 -> 전체추가됨
+//        findMember.getAddressHistory().remove(new Address("o1", "o1", "o1"));
+//        findMember.getAddressHistory().add(new Address("newCity1", "o1", "o1"));
+
+        findMember.getAddressHistory2().add(new AddressEntity("o1", "o1", "o1"));
+        findMember.getAddressHistory2().add(new AddressEntity("newCity1", "o1", "o1"));
+    }
+
+    private static void ex9_3(EntityManager em) {
+        Member member = new Member();
+        member.setName("name1");
+        member.setHomeAddress(new Address("a", "b", "c"));
+        member.getFavoriteFoods().add("치킨");
+        member.getFavoriteFoods().add("피자");
+        member.getFavoriteFoods().add("족발");
+
+        member.getAddressHistory().add(new Address("o1", "o1", "o1"));
+        member.getAddressHistory().add(new Address("o2", "o2", "o2"));
+
+        em.persist(member);
+
+        em.flush();
+        em.clear();
+
+        System.out.println("======= START ========");
+        final Member findMember = em.find(Member.class, member.getId());
+
+        final List<Address> addressHistory = findMember.getAddressHistory();
+        for (Address address : addressHistory) {
+            System.out.println("address = " + address.getCity());
+        }
+
+        final Set<String> favoriteFoods = findMember.getFavoriteFoods();
+        for (String favoriteFood : favoriteFoods) {
+            System.out.println("favoriteFood = " + favoriteFood);
+        }
+    }
+
+    private static void ex9_2(EntityManager em) {
+        final Address homeAddress = new Address("a", "b", "c");
+
+        Member member = new Member();
+        member.setName("name1");
+        member.setHomeAddress(homeAddress);
+        em.persist(member);
+
+        Member member2 = new Member();
+        member2.setName("name2");
+        member2.setHomeAddress(homeAddress);
+        em.persist(member2);
+
+//        member.getHomeAddress().setCity("newCity");
+    }
+
+    private static void ex9_1(EntityManager em) {
+        Member member = new Member();
+        member.setName("name");
+        member.setHomeAddress(new Address("a", "b", "c"));
+        em.persist(member);
     }
 
     private static void ex8_11(EntityManager em) {

@@ -15,6 +15,9 @@
     <class>jpabook.jpashop.domain.Team</class>
     <class>jpabook.jpashop.domain.Parent</class>
     <class>jpabook.jpashop.domain.Child</class>
+    <class>jpabook.jpashop.domain.Period</class>
+    <class>jpabook.jpashop.domain.Address</class>
+    <class>jpabook.jpashop.domain.AddressEntity</class>
 
     <properties>
       <!-- 필수 속성 -->
